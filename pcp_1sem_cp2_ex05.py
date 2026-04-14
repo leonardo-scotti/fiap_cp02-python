@@ -1,75 +1,68 @@
-def pode_aprovar(idade_cliente, renda_mensal, emprestimo_desejado):
-    if idade_cliente < 18:
-        print("Você não pode realizar o empréstimo. Idade menor que 18 anos.")
-        return False
+def coleta_dados(nome_cliente, idade, renda_mensal, valor_emprestimo, parcelas):
+  nome_cliente        = input("Digite seu nome: ")
+  idade_cliente       = int(input("Digite a sua idade: "))
+  renda_mensal        = float(input("Digite sua renda mensal: "))
+  emprestimo_desejado = float(input("Digite o valor do empréstimo desejado: "))
+  parcelas_emprestimo = int(input("Digite a quantidade de parcelas desejadas (3 - 24): "))
+  return nome_cliente, idade_cliente, renda_mensal, emprestimo_desejado, parcelas_emprestimo
 
-    if emprestimo_desejado > renda_mensal * 20:
-        print("Você não pode realizar o empréstimo. Sua renda não é suficiente.")
-        return False
+def pode_aprovar(idade_cliente, parcelas_emprestimo, emprestimo_desejado, renda_mensal):
+  if idade_cliente < 18:
+    return False, "Você não pode realizar o empréstimo. Idade menor que 18 anos."
 
-    return True
+  if parcelas_emprestimo < 3 or parcelas_emprestimo > 24:
+    return False, "Quantidade de parcelas deve ser entre 3 e 24."
 
+  if emprestimo_desejado > renda_mensal * 20:
+    return False, "Você não pode realizar o empréstimo. Sua renda não é suficiente."
 
-def definir_taxas(parcelas_emprestimo):
-    if parcelas_emprestimo < 6:
-        return 0.05
-    elif parcelas_emprestimo < 12:
-        return 0.08
-    else:
-        return 0.10
+  return True, None
 
+def definir_taxa(parcelas_emprestimo):
+  if parcelas_emprestimo <= 6:
+    return 0.05
+  if parcelas_emprestimo <= 12:
+    return 0.08
+  if parcelas_emprestimo <= 24:
+    return 0.10
 
-def calcular_parcelas(emprestimo_desejado, parcelas_emprestimo, taxa_juros):
-    fator = (1 + taxa_juros) ** parcelas_emprestimo
-    pmt = emprestimo_desejado * (taxa_juros * fator) / (fator - 1)
+def calcular_parcelas(emprestimo_desejado, taxa_juros, parcelas_emprestimo):
+  PV = emprestimo_desejado
+  n = parcelas_emprestimo
+  i = taxa_juros
 
-    return pmt
+  fator = (1 + i) ** n
+  PMT = PV * (i * fator) / (fator - 1)
 
+  return PMT
 
 def calcular_total(parcela, parcelas):
-    return parcela * parcelas
-
+  return parcela * parcelas
 
 def calcular_juros(total, valor_emprestimo):
-    return total - valor_emprestimo
+  return total - valor_emprestimo
 
-def main():
-    nome_cliente = input("Digite seu nome: ")
-    idade_cliente = int(input("Digite a sua idade: "))
-    renda_mensal = float(input("Digite sua renda mensal: "))
-    emprestimo_desejado = float(input("Digite o valor desejado do empréstimo: "))
-    parcelas_emprestimo = int(input("Digite a quantidade de parcelas desejadas (3 - 24): "))
+def exibir_resultado(nome, emprestimo, taxa, pmt, parcelas, total, juros):
+  print("\nParabéns! Seu empréstimo foi aprovado, segue as informações:")
+  print(f"Nome:              {nome}")
+  print(f"Valor financiado:  R$ {emprestimo:.2f}")
+  print(f"Taxa de juros:     {taxa * 100:.0f}% ao mês")
+  print(f"Valor da parcela:  R$ {pmt:.2f}")
+  print(f"Total a pagar:     R$ {total:.2f}")
+  print(f"Total em juros:    R$ {juros:.2f}")
 
-    if parcelas_emprestimo < 3 or parcelas_emprestimo > 24:
-        print("Quantidade de parcelas inválida. Escolha entre 3 e 24.")
-        return
+def valor_emprestimo_completo():
+  nome, idade, renda, emprestimo, parcelas = coleta_dados(None, None, None, None, None)
 
-    aprovado = pode_aprovar(idade_cliente, renda_mensal, emprestimo_desejado)
+  aprovado, motivo_rejeicao = pode_aprovar(idade, parcelas, emprestimo, renda)
 
-    if not aprovado:
-        print("Empréstimo não aprovado.")
-        return
+  if aprovado:
+    taxa = definir_taxa(parcelas)
+    pmt = calcular_parcelas(emprestimo, taxa, parcelas)
+    total = calcular_total(pmt, parcelas)
+    juros = calcular_juros(total, emprestimo)
+    exibir_resultado(nome, emprestimo, taxa, pmt, parcelas, total, juros)
+  else:
+    print(motivo_rejeicao)
 
-    taxa_juros = definir_taxas(parcelas_emprestimo)
-
-    valor_parcela = calcular_parcelas(
-        emprestimo_desejado,
-        parcelas_emprestimo,
-        taxa_juros
-    )
-
-    total_pago = calcular_total(valor_parcela, parcelas_emprestimo)
-
-    total_juros = calcular_juros(total_pago, emprestimo_desejado)
-
-    print("\n===== RESULTADO DO EMPRÉSTIMO =====")
-    print(f"Cliente: {nome_cliente}")
-    print(f"Valor do empréstimo: R$ {emprestimo_desejado:.2f}")
-    print(f"Parcelas: {parcelas_emprestimo}")
-    print(f"Taxa de juros: {taxa_juros * 100:.2f}% ao mês")
-    print(f"Valor da parcela: R$ {valor_parcela:.2f}")
-    print(f"Total pago: R$ {total_pago:.2f}")
-    print(f"Total de juros: R$ {total_juros:.2f}")
-
-if __name__ == "__main__":
-    main()
+valor_emprestimo_completo()
