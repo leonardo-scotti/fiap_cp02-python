@@ -1,7 +1,7 @@
-def coleta_dados(nome_cliente, idade, renda_mensal, valor_emprestimo, parcelas):
-  nome_cliente        = input("Digite seu nome: ")
-  idade_cliente       = int(input("Digite a sua idade: "))
-  renda_mensal        = float(input("Digite sua renda mensal: "))
+def coleta_dados(nome_cliente, renda_mensal):
+  nome_cliente = input("Digite seu nome: ")
+  idade_cliente = int(input("Digite a sua idade: "))
+  renda_mensal = float(input("Digite sua renda mensal: "))
   emprestimo_desejado = float(input("Digite o valor do empréstimo desejado: "))
   parcelas_emprestimo = int(input("Digite a quantidade de parcelas desejadas (3 - 24): "))
   return nome_cliente, idade_cliente, renda_mensal, emprestimo_desejado, parcelas_emprestimo
@@ -44,12 +44,12 @@ def calcular_juros(total, valor_emprestimo):
 
 def exibir_resultado(nome, emprestimo, taxa, pmt, parcelas, total, juros):
   print("\nParabéns! Seu empréstimo foi aprovado, segue as informações:")
-  print(f"Nome:              {nome}")
-  print(f"Valor financiado:  R$ {emprestimo:.2f}")
-  print(f"Taxa de juros:     {taxa * 100:.0f}% ao mês")
-  print(f"Valor da parcela:  R$ {pmt:.2f}")
-  print(f"Total a pagar:     R$ {total:.2f}")
-  print(f"Total em juros:    R$ {juros:.2f}")
+  print(f"Nome: {nome}")
+  print(f"Valor financiado: R$ {emprestimo:.2f}")
+  print(f"Taxa de juros: {taxa * 100:.0f}% ao mês")
+  print(f"Valor da parcela: R$ {pmt:.2f}")
+  print(f"Total a pagar: R$ {total:.2f}")
+  print(f"Total em juros: R$ {juros:.2f}")
 
 def valor_emprestimo_completo():
   nome, idade, renda, emprestimo, parcelas = coleta_dados(None, None, None, None, None)

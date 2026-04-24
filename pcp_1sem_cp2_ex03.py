@@ -1,5 +1,3 @@
-print("=== Calculadora de Médias ===\n")
-
 vet_cp= []
 vet_sp= []
 
